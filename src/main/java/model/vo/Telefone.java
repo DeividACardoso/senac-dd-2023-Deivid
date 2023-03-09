@@ -9,16 +9,38 @@ public class Telefone {
 	private boolean ativo;
 	private boolean movel;
 	
-	
 	public Telefone() {
+
 	}
 
-
-	public Telefone(String ddd, String numero, boolean ativo, boolean movel) {
+	public Telefone(Integer id, Integer idCliente, String ddd, String numero, boolean ativo, boolean movel) {
+		super();
+		this.id = id;
+		IdCliente = idCliente;
 		this.ddd = ddd;
 		this.numero = numero;
 		this.ativo = ativo;
 		this.movel = movel;
+	}
+
+
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
+	public Integer getIdCliente() {
+		return IdCliente;
+	}
+
+
+	public void setIdCliente(Integer idCliente) {
+		IdCliente = idCliente;
 	}
 
 

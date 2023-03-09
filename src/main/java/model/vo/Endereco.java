@@ -9,19 +9,20 @@ public class Endereco {
 	private String cidade;
 	private String estado;
 	
-	//Construtores
-	public Endereco(String cep, String rua, String cidade, String estado) {
+
+	public Endereco() {
+		
+	}
+
+	public Endereco(Integer id, String cep, String rua, String cidade, String estado) {
 		super();
+		this.id = id;
 		this.cep = cep;
 		this.rua = rua;
 		this.cidade = cidade;
 		this.estado = estado;
 	}
 
-	public Endereco() {
-	}
-
-	
 	public Integer getId() {
 		return id;
 	}

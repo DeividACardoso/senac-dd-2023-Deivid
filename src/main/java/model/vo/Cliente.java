@@ -4,22 +4,32 @@ import java.util.List;
 
 public class Cliente {
 	
+	private Integer id;
 	private String nome;
 	private String cpf;
 	private List<Telefone> telefones;
 	private boolean ativo;
 	private Endereco endereco;
-	public Cliente(String nome, String cpf, List<Telefone> telefones, boolean ativo, Endereco endereco) {
+	
+
+	public Cliente() {
+
+	}
+	public Cliente(Integer id, String nome, String cpf, List<Telefone> telefones, boolean ativo, Endereco endereco) {
 		super();
+		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
 		this.telefones = telefones;
 		this.ativo = ativo;
 		this.endereco = endereco;
 	}
-	public Cliente() {
-		super();
-		// TODO Auto-generated constructor stub
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	public String getNome() {
 		return nome;

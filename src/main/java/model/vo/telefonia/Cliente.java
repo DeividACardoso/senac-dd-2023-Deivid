@@ -1,4 +1,4 @@
-package model.vo;
+package model.vo.telefonia;
 
 import java.util.List;
 
@@ -15,6 +15,18 @@ public class Cliente {
 	public Cliente() {
 
 	}
+	
+	
+	public Cliente(String nome, String cpf, List<Telefone> telefones, boolean ativo, Endereco endereco) {
+		super();
+		this.nome = nome;
+		this.cpf = cpf;
+		this.telefones = telefones;
+		this.ativo = ativo;
+		this.endereco = endereco;
+	}
+
+
 	public Cliente(Integer id, String nome, String cpf, List<Telefone> telefones, boolean ativo, Endereco endereco) {
 		super();
 		this.id = id;
@@ -64,8 +76,11 @@ public class Cliente {
 	
 	@Override
 	public String toString() {
-		return "Cliente [nome=" + nome + ", cpf=" + cpf + ", telefones=" + telefones + ", ativo=" + ativo
-				+ ", endereco=" + endereco + "]";
+		return "Cliente: Nome = " + nome
+				+ "\nCPF = " + cpf
+				+ "\nTelefones : " + telefones
+				+ "\nAtivo = " + ativo
+				+ "\nEndereco : " + endereco;
 	}
 	
 	

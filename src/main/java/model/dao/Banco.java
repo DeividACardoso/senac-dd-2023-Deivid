@@ -11,10 +11,11 @@ public class Banco {
 	
 	//private static final String DRIVER = "com.mysql.cj.jdbc.Driver"; //MYSQL versão 8
 	private static final String DRIVER = "com.mysql.jdbc.Driver"; //MYSQL versão 5
-	private static final String BANCODADOS = "dbfoodtruck";
-	private static final String CONEXAO = "jdbc:mysql://localhost:3306/" + BANCODADOS;
+	private static final String BANCODADOS = "exemplos";
+	private static final String CONEXAO = "jdbc:mysql://localhost:3306/"
+									+BANCODADOS + "?useSSL=false&serverTimezone=UTC&useTimezone=treu";
 	private static final String USER = "root";
-	private static final String PASSWORD = "";
+	private static final String PASSWORD = "admin";
 	
 	public static Connection getConnection(){
 		try {

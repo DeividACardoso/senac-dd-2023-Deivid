@@ -5,59 +5,41 @@ public class Endereco {
 	//Atributos
 	private Integer id;
 	private String cep;
-	private String Bairro;
 	private String rua;
+	private String numero;
+	private String bairro;
 	private String cidade;
 	private String estado;
-	private String numero;
-
-
-
 	
+	//Construtores
 	public Endereco() {
-		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 	
-
-	public Endereco(Integer id, String cep, String bairro, String rua, String cidade, String estado, String numero) {
+	public Endereco(Integer id, String cep, String rua, String numero, String bairro, String cidade, String estado) {
 		super();
 		this.id = id;
 		this.cep = cep;
-		Bairro = bairro;
 		this.rua = rua;
+		this.numero = numero;
+		this.bairro = bairro;
 		this.cidade = cidade;
 		this.estado = estado;
-		this.numero = numero;
 	}
 
-
-	public Endereco(String cep, String bairro, String rua, String cidade, String estado, String numero) {
+	public Endereco(String cep, String rua, String numero, String bairro, String cidade, String estado) {
 		super();
 		this.cep = cep;
-		Bairro = bairro;
 		this.rua = rua;
+		this.numero = numero;
+		this.bairro = bairro;
 		this.cidade = cidade;
 		this.estado = estado;
-		this.numero = numero;
 	}
 
-	public String getBairro() {
-		return Bairro;
-	}
-
-	public void setBairro(String bairro) {
-		Bairro = bairro;
-	}
-
-	public String getNumero() {
-		return numero;
-	}
-
-	public void setNumero(String numero) {
-		this.numero = numero;
-	}
-
+	//Métodos
+	
+	//Métodos getter e setters
 	public Integer getId() {
 		return id;
 	}
@@ -82,6 +64,22 @@ public class Endereco {
 		this.rua = rua;
 	}
 
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
 	public String getCidade() {
 		return cidade;
 	}
@@ -100,11 +98,7 @@ public class Endereco {
 
 	@Override
 	public String toString() {
-		return 	"\nCep = " + cep
-				+ "\nRua = " + rua
-				+ "\nCidade = " + cidade
-				+ "\nEstado = " + estado + "\n";
+		return "Endereco [cep=" + cep + ", rua=" + rua + ", numero=" + numero + ", bairro=" + bairro + ", cidade="
+				+ cidade + ", estado=" + estado + "]";
 	}
-	
-	
 }

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import model.dao.Banco;
+import model.vo.telefonia.Endereco;
 import model.vo.telefonia.Telefone;
 
 public class TelefoneDAO {
@@ -48,4 +49,60 @@ public class TelefoneDAO {
 		return novoTelefone;
 	}
 	
+	public boolean atualizar(Telefone telefoneEditado) {
+		boolean atualizou = false;
+		Connection conexao = Banco.getConnection();
+		String sql = " UPDATE TELEFONE "
+				   + " SET DDD = ?, NUMERO = ?, ATIVO= ?, "
+				   + "     MOVEL = ? "
+				   + " WHERE ID = ? " ;
+		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
+		try {
+			query.setString(1, telefoneEditado.getDdd());
+			query.setString(2, telefoneEditado.getNumero());
+			query.setBoolean(3, telefoneEditado.isAtivo());
+			query.setBoolean(4, telefoneEditado.isMovel());
+			query.setInt(5, telefoneEditado.getId());
+			
+			int quantidadeLinhasAtualizadas = query.executeUpdate();
+			atualizou = quantidadeLinhasAtualizadas > 0;
+		} catch (SQLException e) {
+			System.out.println("Erro ao atualizar telefone. "
+					+ "\n Causa: " + e.getMessage());
+		}finally {
+			Banco.closePreparedStatement(query);
+			Banco.closeConnection(conexao);
+		}
+		
+		
+		return atualizou;
+	}
+	
+	public Telefone consultarPorId(int id) {
+		Telefone telefoneConsultado = null;
+		Connection conexao = Banco.getConnection();
+		String sql =  " SELECT * FROM TELEFONE "
+				    + " WHERE ID = ?";
+		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
+		
+		try {
+			query.setInt(1, id);
+			ResultSet resultado = query.executeQuery();
+			
+			if(resultado.next()) {
+				telefoneConsultado = new Telefone();
+				telefoneConsultado.setIdCliente(resultado.getInt("id"));
+				telefoneConsultado.setDdd(resultado.getString("ddd"));
+				telefoneConsultado.setNumero(resultado.getString("numero"));
+				telefoneConsultado.setAtivo(resultado.getBoolean("ativo"));
+				telefoneConsultado.setMovel(resultado.getBoolean("movel"));
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao buscar telefone com id: + " + id 
+					+ "\n Causa: " + e.getMessage());	
+		}
+		
+		
+		return telefoneConsultado;
+	}
 }

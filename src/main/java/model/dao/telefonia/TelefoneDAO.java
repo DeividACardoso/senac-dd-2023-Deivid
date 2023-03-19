@@ -105,4 +105,26 @@ public class TelefoneDAO {
 		
 		return telefoneConsultado;
 	}
+	
+	public boolean excluir(int id) {
+		boolean excluiu = false;
+		
+		Connection conexao = Banco.getConnection();
+		String sql = " DELETE FROM TELEFONE "
+				   + " WHERE ID = ? ";
+		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
+		try {
+			query.setInt(1, id);
+			
+			int quantidadeLinhasAtualizadas = query.executeUpdate();
+			excluiu = quantidadeLinhasAtualizadas > 0;
+		} catch (SQLException excecao) {
+			System.out.println("Erro ao excluir endereço. "
+					+ "\n Causa: " + excecao.getMessage());
+		}finally {
+			Banco.closePreparedStatement(query);
+			Banco.closeConnection(conexao);
+		}
+		return excluiu;
+	}
 }

@@ -6,33 +6,27 @@ public class Vacina {
 	private String paisDeOrigem;
 	private EstagioDaPesquisa estagioDaPesquisa;
 	private String dataInicioDaPesquisa;
-	private String nomePesquisadorResponsavel;
+	private int idPesquisadorResponsavel;
 	
 	public Vacina(Integer id, String paisDeOrigem, EstagioDaPesquisa estagioDaPesquisa, String dataInicioDaPesquisa,
-			String nomePesquisadorResponsavel) {
+			int idPesquisadorResponsavel) {
 		super();
 		this.id = id;
 		this.paisDeOrigem = paisDeOrigem;
 		this.estagioDaPesquisa = estagioDaPesquisa;
 		this.dataInicioDaPesquisa = dataInicioDaPesquisa;
-		this.nomePesquisadorResponsavel = nomePesquisadorResponsavel;
+		this.idPesquisadorResponsavel = idPesquisadorResponsavel;
 	}
 
 	public Vacina(String paisDeOrigem, EstagioDaPesquisa estagioDaPesquisa, String dataInicioDaPesquisa,
-			String nomePesquisadorResponsavel) {
+			int idPesquisadorResponsavel) {
 		super();
 		this.paisDeOrigem = paisDeOrigem;
 		this.estagioDaPesquisa = estagioDaPesquisa;
 		this.dataInicioDaPesquisa = dataInicioDaPesquisa;
-		this.nomePesquisadorResponsavel = nomePesquisadorResponsavel;
+		this.idPesquisadorResponsavel = idPesquisadorResponsavel;
 	}
 
-	public Vacina(String paisDeOrigem, String dataInicioDaPesquisa, String nomePesquisadorResponsavel) {
-		super();
-		this.paisDeOrigem = paisDeOrigem;
-		this.dataInicioDaPesquisa = dataInicioDaPesquisa;
-		this.nomePesquisadorResponsavel = nomePesquisadorResponsavel;
-	}
 
 	public Vacina() {
 		super();
@@ -71,15 +65,19 @@ public class Vacina {
 		this.dataInicioDaPesquisa = dataInicioDaPesquisa;
 	}
 
-	public String getNomePesquisadorResponsavel() {
-		return nomePesquisadorResponsavel;
+	public int getIdPesquisadorResponsavel() {
+		return idPesquisadorResponsavel;
 	}
 
-	public void setNomePesquisadorResponsavel(String nomePesquisadorResponsavel) {
-		this.nomePesquisadorResponsavel = nomePesquisadorResponsavel;
+	public void setIdPesquisadorResponsavel(int idPesquisadorResponsavel) {
+		this.idPesquisadorResponsavel = idPesquisadorResponsavel;
 	}
 	
-	
+	public String toString() {
+		return 	  "\nPaís de Origem: " + paisDeOrigem
+				+ "\nEstágio da pesquisa: " + estagioDaPesquisa
+				+ "\nData inicio da Pesquisa: " + dataInicioDaPesquisa;
+	}
 	
 	
 }

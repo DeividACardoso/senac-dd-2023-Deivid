@@ -16,7 +16,7 @@ public enum EstagioDaPesquisa {
 		return valor;
 	}
 
-	public static EstagioDaPesquisa EstagioDaPesquisaPorValor(int valor) {
+	public static EstagioDaPesquisa estagioDaPesquisaPorValor(int valor) {
 		EstagioDaPesquisa estagioDaPesquisa = null;
 		for(EstagioDaPesquisa elemento : EstagioDaPesquisa.values()) {
 			if(elemento.getValor() == valor) {

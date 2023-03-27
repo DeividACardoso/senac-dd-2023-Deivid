@@ -16,6 +16,38 @@ import model.vo.vacinas.TipoPessoa;
 
 public class PessoaDAO {
 	
+	public boolean atualizar(Pessoa pessoaEditada) {
+		boolean atualizou = false;
+		Connection conn = Banco.getConnection();
+		String sql =  " UPDATE PESSOA "
+					+ " SET NOME = ?, CPF = ?, DATA_NASCIMENTO = ?, SEXO = ?, TIPO_PESSOA = ?, REACAO_VACINA = ? "
+					+ " WHERE ID = ? ";
+		
+		PreparedStatement query = Banco.getPreparedStatement(conn, sql);
+		
+		try {
+			query.setString(1, pessoaEditada.getNome());
+			query.setString(2, pessoaEditada.getCpf());
+			query.setDate(3, Date.valueOf(pessoaEditada.getDataNascimento()));
+			query.setString(4, pessoaEditada.getSexo());
+			query.setInt(5, pessoaEditada.getTipoPessoa().getValor());
+			query.setInt(6, pessoaEditada.getReacaoAVacina().getValor());
+			query.setInt(7, pessoaEditada.getId());
+			
+			int linhasAtualizadas = query.executeUpdate();
+			atualizou = linhasAtualizadas > 0;
+		} catch (SQLException e) {
+			System.out.println("Erro ao atualizar pessoa."
+					+ "\nCausa: " + e.getMessage());
+		} finally {
+		//Fechar conexão ao banco
+		Banco.closePreparedStatement(query);
+		Banco.closeConnection(conn);
+		}
+		
+		return atualizou;
+	}
+	
 	public boolean excluirPessoa(int id) {
 		boolean excluiu = false;
 		

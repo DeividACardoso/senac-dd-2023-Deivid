@@ -14,3 +14,14 @@ CREATE TABLE `vacina`.`pessoa` (
   `dt_inicio_pesquisa` DATE NOT NULL,
   `nome_pesquisador` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idvacinas`));
+ALTER TABLE `vacina`.`vacinas` 
+DROP COLUMN `nome_pesquisador`,
+ADD COLUMN `id_pesquisador` INT NULL AFTER `dt_inicio_pesquisa`,
+ADD INDEX `id_pesquisador_idx` (`id_pesquisador` ASC) VISIBLE;
+;
+ALTER TABLE `vacina`.`vacinas` 
+ADD CONSTRAINT `id_pesquisador`
+  FOREIGN KEY (`id_pesquisador`)
+  REFERENCES `vacina`.`pessoa` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;

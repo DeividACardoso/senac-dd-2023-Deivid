@@ -9,6 +9,7 @@ public class Cliente {
 	private String cpf;
 	private List<Telefone> telefones;
 	private boolean ativo;
+	private boolean movel;
 	private Endereco endereco;
 	
 
@@ -17,26 +18,40 @@ public class Cliente {
 	}
 	
 	
-	public Cliente(String nome, String cpf, List<Telefone> telefones, boolean ativo, Endereco endereco) {
+	public boolean isMovel() {
+		return movel;
+	}
+
+
+	public void setMovel(boolean movel) {
+		this.movel = movel;
+	}
+
+
+	public Cliente(String nome, String cpf, List<Telefone> telefones, boolean ativo, boolean movel, Endereco endereco) {
 		super();
 		this.nome = nome;
 		this.cpf = cpf;
 		this.telefones = telefones;
 		this.ativo = ativo;
+		this.movel = movel;
 		this.endereco = endereco;
 	}
 
 
-	public Cliente(Integer id, String nome, String cpf, List<Telefone> telefones, boolean ativo, Endereco endereco) {
+	public Cliente(Integer id, String nome, String cpf, List<Telefone> telefones, boolean ativo, boolean movel,
+			Endereco endereco) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
 		this.telefones = telefones;
 		this.ativo = ativo;
+		this.movel = movel;
 		this.endereco = endereco;
 	}
-	
+
+
 	public Integer getId() {
 		return id;
 	}

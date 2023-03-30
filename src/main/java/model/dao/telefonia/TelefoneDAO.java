@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import model.dao.Banco;
+import model.vo.telefonia.Cliente;
 import model.vo.telefonia.Endereco;
 import model.vo.telefonia.Telefone;
 
@@ -126,5 +128,10 @@ public class TelefoneDAO {
 			Banco.closeConnection(conexao);
 		}
 		return excluiu;
+	}
+
+	public void ativarTelefones(Cliente novoCliente, List<Telefone> telefones) {
+		// TODO Auto-generated method stub
+		
 	}
 }

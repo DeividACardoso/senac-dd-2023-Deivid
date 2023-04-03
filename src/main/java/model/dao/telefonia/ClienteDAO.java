@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +13,10 @@ import model.vo.telefonia.Cliente;
 import model.vo.telefonia.Endereco;
 
 public class ClienteDAO {
-
+	
 	public Cliente inserir(Cliente novoCliente) {
 		Connection conexao = Banco.getConnection();
-		String sql = " INSERT INTO CLIENTE(NOME, CPF, ID_ENDERECO, ATIVO, MOVEL) "
+		String sql = " INSERT INTO CLIENTE(NOME, CPF, ID_ENDERECO, ATIVO) "
 				+ " VALUES (?,?,?,?) ";
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conexao, sql);
 		try {
@@ -23,71 +24,76 @@ public class ClienteDAO {
 			stmt.setString(2, novoCliente.getCpf());
 			stmt.setInt(3, novoCliente.getEndereco().getId());
 			stmt.setBoolean(4, novoCliente.isAtivo());
-			//stmt.setBoolean(5, novoCliente.isMovel());
+			//stmt.setDate(5, java.sql.Date.valueOf(novoCliente.getDataNascimento()));
 			stmt.execute();
 			
-			ResultSet rs = stmt.getGeneratedKeys();
+			//Preencher o id gerado no banco no objeto
+			ResultSet resultado = stmt.getGeneratedKeys();
+			if(resultado.next()) {
+				novoCliente.setId(resultado.getInt(1));
+			}
 			
-			if(rs.next()) {
-				int idGerado = rs.getInt(1);
-				novoCliente.setId(idGerado);
-
-				if (!novoCliente.getTelefones().isEmpty()) {
-					TelefoneDAO telefoneDAO = new TelefoneDAO();
-					telefoneDAO.ativarTelefones(novoCliente, novoCliente.getTelefones());
-				}
+			//TODO cadastrar os telefones do cliente
+			if (!novoCliente.getTelefones().isEmpty()) {
+				TelefoneDAO telefoneDAO = new TelefoneDAO();
+				telefoneDAO.ativarTelefones(novoCliente.getId(), novoCliente.getTelefones());
 			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao inserir novo cliente.");
 			System.out.println("Erro: " + e.getMessage());
 		}
+		
 		return novoCliente;
 	}
 	
-	public boolean cpfJaUtilizado(String cpfBuscado) {
-		boolean cpfJaUtilizado = false;
+	public boolean atualizar(Cliente cliente) {
 		Connection conexao = Banco.getConnection();
-		String sql = " select count(*) from cliente "
-				   + " where cpf = ? ";
-		
-		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
+		String sql = " UPDATE CLIENTE SET NOME=?, CPF=?, ID_ENDERECO=?, ATIVO=? "
+				+ " WHERE ID = ?";
+		PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql);
+		int registrosAlterados = 0;
 		try {
-			query.setString(1, cpfBuscado);
-			ResultSet resultado = query.executeQuery();
-			
-			if(resultado.next()) {
-				cpfJaUtilizado = resultado.getInt(1) > 0;
-			}
-		}catch (Exception e) {
-			System.out.println("Erro ao verificar uso do CPF " + cpfBuscado 
-					+ "\n Causa:" + e.getMessage());
-		}finally {
-			Banco.closePreparedStatement(query);
-			Banco.closeConnection(conexao);
+			stmt.setString(1, cliente.getNome());
+			stmt.setString(2, cliente.getCpf());
+			stmt.setInt(3, cliente.getEndereco().getId());
+			stmt.setBoolean(4, cliente.isAtivo());
+			stmt.setInt(5, cliente.getId());
+			registrosAlterados = stmt.executeUpdate();
+			 
+			TelefoneDAO telefoneDAO = new TelefoneDAO(); 
+			telefoneDAO.ativarTelefones(cliente.getId(), cliente.getTelefones());
+		} catch (SQLException e) {
+			System.out.println("Erro ao inserir novo cliente.");
+			System.out.println("Erro: " + e.getMessage());
 		}
 		
-		return cpfJaUtilizado;
-	}
-
-	public boolean clienteTemTelefoneAssociado(int id) {
-		ClienteDAO cliente= new ClienteDAO();
-		Cliente clienteBuscado = new Cliente(); 
-		
-		clienteBuscado = cliente.consultarPorId(id);
-		
-		boolean possuiTelefone = false;
-		
-		if(!clienteBuscado.getTelefones().isEmpty()) {
-			possuiTelefone = true;
-		}
-		
-		return possuiTelefone;
-	}
-
-	public boolean excluir(int id) {
-		return false;
+		return registrosAlterados > 0;
 	}
 	
+	public boolean excluir(int id) {
+		Connection conn = Banco.getConnection();
+		String sql = "DELETE FROM CLIENTE WHERE ID= " + id;
+		Statement stmt = Banco.getStatement(conn);
+		
+		int quantidadeLinhasAfetadas = 0;
+		try {
+			quantidadeLinhasAfetadas = stmt.executeUpdate(sql);
+		} catch (SQLException e) {
+			System.out.println("Erro ao excluir cliente.");
+			System.out.println("Erro: " + e.getMessage());
+		}
+		
+		boolean excluiu = quantidadeLinhasAfetadas > 0;
+
+		if (excluiu) {
+			TelefoneDAO telefoneDAO = new TelefoneDAO();
+			telefoneDAO.desativarTelefones(id);
+		}
+
+		return excluiu;
+	}
+
+
 	public Cliente consultarPorId(int id) {
 		Cliente clienteBuscado = null;
 		Connection conexao = Banco.getConnection();
@@ -154,5 +160,55 @@ public class ClienteDAO {
 		clienteBuscado.setTelefones(telefoneDAO.consultarPorIdCliente(clienteBuscado.getId()));
 		
 		return clienteBuscado;
+	}
+	
+	public boolean cpfJaUtilizado(String cpfBuscado) {
+		boolean cpfJaUtilizado = false;
+		Connection conexao = Banco.getConnection();
+		String sql = " select count(*) from cliente "
+				   + " where cpf = ? ";
+		
+		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
+		try {
+			query.setString(1, cpfBuscado);
+			ResultSet resultado = query.executeQuery();
+			
+			if(resultado.next()) {
+				cpfJaUtilizado = resultado.getInt(1) > 0;
+			}
+		}catch (Exception e) {
+			System.out.println("Erro ao verificar uso do CPF " + cpfBuscado 
+					+ "\n Causa:" + e.getMessage());
+		}finally {
+			Banco.closePreparedStatement(query);
+			Banco.closeConnection(conexao);
+		}
+		
+		return cpfJaUtilizado;
+	}
+
+	public int contarClientesQueResidemNoEndereco(Integer idEndereco) {
+		int totalClientesDoEnderecoBuscado = 0;
+		Connection conexao = Banco.getConnection();
+		String sql = " select count(id) from cliente "
+				   + " where id_endereco = ? ";
+		
+		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
+		try {
+			query.setInt(1, idEndereco);
+			ResultSet resultado = query.executeQuery();
+			
+			if(resultado.next()) {
+				totalClientesDoEnderecoBuscado = resultado.getInt(1);
+			}
+			
+		}catch (Exception e) {
+			System.out.println("Erro contar os clientes que residem em um endereço. \n Causa:" + e.getMessage());
+		}finally {
+			Banco.closePreparedStatement(query);
+			Banco.closeConnection(conexao);
+		}
+		
+		return totalClientesDoEnderecoBuscado;
 	}
 }

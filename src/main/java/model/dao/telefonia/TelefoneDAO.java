@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import model.dao.Banco;
@@ -80,31 +81,39 @@ public class TelefoneDAO {
 		return atualizou;
 	}
 	
-	public Telefone consultarPorId(int id) {
-		Telefone telefoneConsultado = null;
+	public List<Telefone> consultarPorIdCliente(Integer id) {
+		List<Telefone> telefones = new ArrayList<Telefone>();
 		Connection conexao = Banco.getConnection();
 		String sql =  " SELECT * FROM TELEFONE "
-				    + " WHERE ID = ?";
+				+ " WHERE ID_CLIENTE = ? ";
 		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
 		
 		try {
 			query.setInt(1, id);
 			ResultSet resultado = query.executeQuery();
-			
-			if(resultado.next()) {
-				telefoneConsultado = new Telefone();
-				telefoneConsultado.setIdCliente(resultado.getInt("id"));
-				telefoneConsultado.setDdd(resultado.getString("ddd"));
-				telefoneConsultado.setNumero(resultado.getString("numero"));
-				telefoneConsultado.setAtivo(resultado.getBoolean("ativo"));
-				telefoneConsultado.setMovel(resultado.getBoolean("movel"));
+			while(resultado.next()) {
+				Telefone telefoneConsultado = converterDeResultSetParaEntidade(resultado);
+				telefones.add(telefoneConsultado);
 			}
 		} catch (SQLException e) {
-			System.out.println("Erro ao buscar telefone com id: + " + id 
-					+ "\n Causa: " + e.getMessage());	
+			System.out.println("Erro ao buscar todos os telefones do cliente informado" 
+								+ "\n Causa: " + e.getMessage());	
+		} finally {
+			Banco.closePreparedStatement(query);
+			Banco.closeConnection(conexao);
 		}
 		
-		
+		return telefones;
+	}
+	
+	private Telefone converterDeResultSetParaEntidade(ResultSet resultado) throws SQLException {
+		Telefone telefoneConsultado = new Telefone(); 
+		telefoneConsultado.setId(resultado.getInt("id"));
+		telefoneConsultado.setIdCliente(resultado.getInt("id_cliente"));
+		telefoneConsultado.setDdd(resultado.getString("ddd"));
+		telefoneConsultado.setNumero(resultado.getString("numero"));
+		telefoneConsultado.setAtivo(resultado.getBoolean("ativo"));
+		telefoneConsultado.setMovel(resultado.getBoolean("movel"));
 		return telefoneConsultado;
 	}
 	

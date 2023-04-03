@@ -18,17 +18,17 @@ public class ExecutavelTelefonia {
 		ClienteBO clienteBO = new ClienteBO();
 		
 		Cliente novoCliente = new Cliente();
-		novoCliente.setNome("Nicolas");
-		novoCliente.setCpf("11122233322");
+		novoCliente.setNome("Mario Jorge");
+		novoCliente.setCpf("10122233311");
 		novoCliente.setAtivo(true);
-		
+
 		try {
 			clienteBO.inserir(novoCliente);
 		} catch (CpfJaUtilizadoException e) {
-			JOptionPane.showMessageDialog(null, "Mensagem erro cliente", "Erro",  JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 		} catch (EnderecoInvalidoException e) {
-			JOptionPane.showMessageDialog(null, "Mensagem erro endereço", "Erro",  JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Erros acontecem. Causa: " 
+						+ e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 		}
 		//		TelefoneDAO dbaTelefone = new TelefoneDAO();
 //		

@@ -2,7 +2,7 @@ package controller;
 
 import java.util.List;
 
-import model.bo.telefonia.ClienteBO;
+import model.bo.ClienteBO;
 import model.exception.CampoInvalidoException;
 import model.exception.ClienteComTelefoneException;
 import model.exception.CpfAlteradoException;

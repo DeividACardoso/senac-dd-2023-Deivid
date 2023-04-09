@@ -1,4 +1,4 @@
-package model.bo.telefonia;
+package model.bo;
 
 import java.util.List;
 

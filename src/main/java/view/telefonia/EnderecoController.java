@@ -1,4 +1,4 @@
-package view;
+package view.telefonia;
 
 import model.vo.telefonia.Endereco;
 

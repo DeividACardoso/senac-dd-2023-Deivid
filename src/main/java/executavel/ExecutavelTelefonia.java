@@ -2,7 +2,7 @@ package executavel;
 
 import javax.swing.JOptionPane;
 
-import model.bo.telefonia.ClienteBO;
+import model.bo.ClienteBO;
 import model.dao.telefonia.EnderecoDAO;
 import model.dao.telefonia.TelefoneDAO;
 import model.exception.CpfJaUtilizadoException;

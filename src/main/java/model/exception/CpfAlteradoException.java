@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package model.exception;
 
 public class CpfAlteradoException extends Exception {
@@ -11,3 +12,14 @@ public class CpfAlteradoException extends Exception {
 		super(mensagem);
 	}
 }
+=======
+package model.exception;
+
+public class CpfAlteradoException extends Exception {
+
+	public CpfAlteradoException(String mensagem) {
+		super(mensagem);
+	}
+
+}
+>>>>>>> branch 'main' of https://github.com/Trintix/senac-dd-2023-Deivid.git

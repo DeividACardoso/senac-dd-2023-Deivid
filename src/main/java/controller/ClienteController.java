@@ -2,7 +2,9 @@ package controller;
 
 import java.util.List;
 
+//<<<<<<< HEAD
 import model.bo.telefonia.ClienteBO;
+//>>>>>>> branch 'main' of https://github.com/Trintix/senac-dd-2023-Deivid.git
 import model.exception.CampoInvalidoException;
 import model.exception.ClienteComTelefoneException;
 import model.exception.CpfAlteradoException;

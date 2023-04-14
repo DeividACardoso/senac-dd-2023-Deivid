@@ -12,10 +12,6 @@ import model.vo.telefonia.Endereco;
 
 public class EnderecoDAO {
 
-	//INSERT
-//INSERT INTO ENDERECO (RUA, CEP, BAIRRO, CIDADE, ESTADO, NUMERO)
-//VALUES ('', '', '', '', 'SC', '');
-	
 	/**
 	 * Insere um novo endereco no banco
 	 * @param novoEndereco o endereco a ser persistido
@@ -23,12 +19,14 @@ public class EnderecoDAO {
 	 */
 	public Endereco inserir(Endereco novoEndereco) {
 		//Conectar ao banco
-		 Connection conexao = Banco.getConnection();
-		 String sql =  " INSERT INTO ENDERECO (RUA, CEP, BAIRRO, CIDADE, ESTADO, NUMERO) "
-		 			 + " VALUES (?, ?, ?, ?, ?, ?) ";
-		 
+		Connection conexao = Banco.getConnection();
+		String sql =  " INSERT INTO ENDERECO (RUA, CEP, BAIRRO, "
+					+ " CIDADE, ESTADO, NUMERO) "
+				    + " VALUES (?,?,?,?,?,?) ";
+
 		PreparedStatement query = Banco.getPreparedStatementWithPk(conexao, sql);
-		//Executar o insert   
+			
+		//executar o INSERT
 		try {
 			query.setString(1, novoEndereco.getRua());
 			query.setString(2, novoEndereco.getCep());
@@ -41,13 +39,13 @@ public class EnderecoDAO {
 			//Preencher o id gerado no banco no objeto
 			ResultSet resultado = query.getGeneratedKeys();
 			if(resultado.next()) {
-			novoEndereco.setId(resultado.getInt(1));
+				novoEndereco.setId(resultado.getInt(1));
 			}
 			
 		} catch (SQLException e) {
-			System.out.println("Erro ao inserir endereço."
+			System.out.println("Erro ao inserir endereço. "
 					+ "\nCausa: " + e.getMessage());
-		} finally {
+		}finally {
 			//Fechar a conexão
 			Banco.closePreparedStatement(query);
 			Banco.closeConnection(conexao);
@@ -60,13 +58,13 @@ public class EnderecoDAO {
 		boolean atualizou = false;
 		Connection conexao = Banco.getConnection();
 		String sql = " UPDATE ENDERECO "
-				   + " SET RUA = ?, CEP = ?, NUMERO = ?, "
+				   + " SET CEP = ?, RUA = ?, NUMERO = ?, "
 				   + "     BAIRRO = ?, CIDADE = ?, ESTADO = ? "
 				   + " WHERE ID = ? ";
 		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
 		try {
-			query.setString(1, enderecoEditado.getRua());
-			query.setString(2, enderecoEditado.getCep());
+			query.setString(1, enderecoEditado.getCep());
+			query.setString(2, enderecoEditado.getRua());
 			query.setString(3, enderecoEditado.getNumero());
 			query.setString(4, enderecoEditado.getBairro());
 			query.setString(5, enderecoEditado.getCidade());
@@ -98,18 +96,14 @@ public class EnderecoDAO {
 			ResultSet resultado = query.executeQuery();
 			
 			if(resultado.next()) {
-				enderecoConsultado = new Endereco();
-				enderecoConsultado.setId(resultado.getInt("id"));
-				enderecoConsultado.setCep(resultado.getString("cep"));
-				enderecoConsultado.setRua(resultado.getString("rua"));
-				enderecoConsultado.setBairro(resultado.getString("bairro"));
-				enderecoConsultado.setNumero(resultado.getString("numero"));
-				enderecoConsultado.setCidade(resultado.getString("cidade"));
-				enderecoConsultado.setEstado(resultado.getString("estado"));
+				enderecoConsultado = converterDeResultSetParaEntidade(resultado);
 			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao buscar endereço com id: + " + id 
 								+ "\n Causa: " + e.getMessage());	
+		}finally {
+			Banco.closePreparedStatement(query);
+			Banco.closeConnection(conexao);
 		}
 		
 		return enderecoConsultado;
@@ -159,7 +153,7 @@ public class EnderecoDAO {
 		
 		return enderecos;
 	}
-			
+	
 	private Endereco converterDeResultSetParaEntidade(ResultSet resultado) throws SQLException {
 		Endereco enderecoConsultado = new Endereco(); 
 		enderecoConsultado.setId(resultado.getInt("id"));
@@ -171,13 +165,4 @@ public class EnderecoDAO {
 		enderecoConsultado.setEstado(resultado.getString("estado"));
 		return enderecoConsultado;
 	}
-			
-	
-	
-	
-	
-	
-	
-	
-
 }

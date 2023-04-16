@@ -11,6 +11,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 import controller.TelefoneController;
@@ -28,6 +29,9 @@ public class TelaCadastroTelefone {
 	private JButton btnSalvar;
 	private JFormattedTextField fTxtDDD;
 	private JFormattedTextField fTxtNumero;
+	private JTextField txtIdUsuario;
+	private JLabel lblIdCliente;
+	private JTextField txtIdCliente;
 
 	/**
 	 * Launch the application.
@@ -57,7 +61,7 @@ public class TelaCadastroTelefone {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 230, 180);
+		frame.setBounds(100, 100, 307, 220);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -74,37 +78,51 @@ public class TelaCadastroTelefone {
 		
 		
 		lblDDD = new JLabel("DDD:");
-		lblDDD.setBounds(10, 15, 46, 20);
+		lblDDD.setBounds(10, 45, 46, 20);
 		frame.getContentPane().add(lblDDD);
 		
 		lblNumero = new JLabel("Número:");
-		lblNumero.setBounds(10, 45, 46, 20);
+		lblNumero.setBounds(10, 75, 46, 20);
 		frame.getContentPane().add(lblNumero);
 		
 		lblNewLabel = new JLabel("Móvel?");
-		lblNewLabel.setBounds(10, 75, 45, 20);
+		lblNewLabel.setBounds(10, 105, 45, 20);
 		frame.getContentPane().add(lblNewLabel);
 		
 		chckbxAtivo = new JCheckBox("Sim");
-		chckbxAtivo.setBounds(55, 75, 97, 20);
+		chckbxAtivo.setBounds(75, 105, 97, 20);
 		frame.getContentPane().add(chckbxAtivo);
 		
 		btnSalvar = new JButton("Salvar");
-		btnSalvar.setBounds(99, 105, 105, 20);
+		btnSalvar.setBounds(99, 150, 105, 20);
 		frame.getContentPane().add(btnSalvar);
 		
 		fTxtDDD = new JFormattedTextField(mascaraDDD);
-		fTxtDDD.setBounds(60, 12, 46, 20);
+		fTxtDDD.setBounds(75, 45, 45, 20);
 		frame.getContentPane().add(fTxtDDD);
 		
 		fTxtNumero = new JFormattedTextField(mascaraNumero);
-		fTxtNumero.setBounds(60, 45, 144, 20);
+		fTxtNumero.setBounds(75, 75, 144, 20);
 		frame.getContentPane().add(fTxtNumero);
+		
+		lblIdCliente = new JLabel("ID Usuario:");
+		lblIdCliente.setBounds(10, 15, 60, 20);
+		frame.getContentPane().add(lblIdCliente);
+		
+		txtIdCliente = new JTextField();
+		txtIdCliente.setBounds(75, 15, 86, 20);
+		frame.getContentPane().add(txtIdCliente);
+		txtIdCliente.setColumns(10);
+		
+		
 		
 		btnSalvar.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				Telefone telefone = new Telefone();
+				
+				int IdClienteConvertido = Integer.parseInt(txtIdCliente.getText());
+				telefone.setIdCliente(IdClienteConvertido);
 				try {
 					String dddSemMascara = (String) mascaraDDD.stringToValue(fTxtDDD.getText());
 					telefone.setDdd(dddSemMascara);
@@ -114,7 +132,7 @@ public class TelaCadastroTelefone {
 							"Erro", JOptionPane.WARNING_MESSAGE);
 				}
 				try {
-					String numeroSemMascara = (String) mascaraNumero.stringToValue(fTxtDDD.getText());
+					String numeroSemMascara = (String) mascaraNumero.stringToValue(fTxtNumero.getText());
 					telefone.setNumero(numeroSemMascara);
 				} catch (ParseException e1) {
 					JOptionPane.showMessageDialog(null,
@@ -125,7 +143,7 @@ public class TelaCadastroTelefone {
 					telefone.setMovel(false);
 				}
 				
-				telefone.setAtivo(false);
+				//telefone.setAtivo(false);
 				
 				TelefoneController controllerTelefone = new TelefoneController();	
 				

@@ -10,7 +10,7 @@ public class TelefoneBO {
 	private TelefoneDAO dao = new TelefoneDAO();
 	
 	public Telefone inserir(Telefone novoTelefone) {
-		novoTelefone.setAtivo(novoTelefone.getIdCliente() != null);
+		novoTelefone.setAtivo(novoTelefone.getIdCliente() != null && novoTelefone.isAtivo());
 		
 		return dao.inserir(novoTelefone);
 	}

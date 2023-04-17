@@ -229,4 +229,32 @@ public class TelefoneDAO {
 			System.out.println("Erro: " + e.getMessage());
 		}
 	}
+
+	public boolean telefoneExiste(String ddd, String numero) {
+		boolean telefoneJaUtilizado = false;
+		Connection conexao = Banco.getConnection();
+		String sql = " select count(*) from telefone "
+				   + " where ddd = ? "
+				   + " and numero = ?";
+		
+		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
+		try {
+			query.setString(1, ddd);
+			query.setString(2, numero);
+			ResultSet resultado = query.executeQuery();
+			
+			if(resultado.next()) {
+				int quantidadeTelefones = resultado.getInt(1);
+				telefoneJaUtilizado = quantidadeTelefones > 0;
+			}
+		}catch (Exception e) {
+			System.out.println("Erro ao verificar se telefone já foi cadastrado " + telefoneJaUtilizado 
+					+ "\n Causa:" + e.getMessage());
+		}finally {
+			Banco.closePreparedStatement(query);
+			Banco.closeConnection(conexao);
+		}
+		
+		return telefoneJaUtilizado;
+	}
 }

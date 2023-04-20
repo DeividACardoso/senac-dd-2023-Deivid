@@ -11,11 +11,12 @@ public class TelefoneBO {
 	private TelefoneDAO dao = new TelefoneDAO();
 	
 	public Telefone inserir(Telefone novoTelefone) throws TelefoneJaUtilizadoException {
-		novoTelefone.setAtivo(novoTelefone.getIdCliente() != null && novoTelefone.isAtivo());
+		novoTelefone.setAtivo(novoTelefone.getIdCliente() != null);
 		
-		if(dao.telefoneExiste(novoTelefone.getDdd(), novoTelefone.getNumero())) {
-			throw new TelefoneJaUtilizadoException(null);
+		if(dao.telefoneJaCadastrado(novoTelefone.getDdd(), novoTelefone.getNumero())) {
+			throw new TelefoneJaUtilizadoException("Telefone informado já existe");
 		}
+		
 		return dao.inserir(novoTelefone);
 	}
 	

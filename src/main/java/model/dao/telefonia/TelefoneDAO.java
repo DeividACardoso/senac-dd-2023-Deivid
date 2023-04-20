@@ -27,7 +27,7 @@ public class TelefoneDAO {
 			
 		//executar o INSERT
 		try {
-			query.setInt(1, novoTelefone.getIdCliente());
+			query.setInt(1, novoTelefone.getIdCliente() == null ? 0 : novoTelefone.getIdCliente());
 			query.setString(2, novoTelefone.getDdd());
 			query.setString(3, novoTelefone.getNumero());
 			query.setBoolean(4, novoTelefone.isAtivo());
@@ -230,31 +230,36 @@ public class TelefoneDAO {
 		}
 	}
 
-	public boolean telefoneExiste(String ddd, String numero) {
-		boolean telefoneJaUtilizado = false;
+	/**
+	 * Verifica se um número COM ddd já consta na base
+	 * @return se o número + ddd já existe
+	 * */
+	public boolean telefoneJaCadastrado(String ddd, String numero) {
+		boolean telefoneJaCadastrado = false;
 		Connection conexao = Banco.getConnection();
-		String sql = " select count(*) from telefone "
-				   + " where ddd = ? "
-				   + " and numero = ?";
-		
+		String sql =  " SELECT count(*) FROM TELEFONE "
+				    + " WHERE DDD = ?"
+				    + " AND NUMERO = ?";
 		PreparedStatement query = Banco.getPreparedStatement(conexao, sql);
+		
 		try {
 			query.setString(1, ddd);
 			query.setString(2, numero);
 			ResultSet resultado = query.executeQuery();
 			
 			if(resultado.next()) {
+				//Obtém o valor da primeira coluna do SELECT (a contagem de resultados)
 				int quantidadeTelefones = resultado.getInt(1);
-				telefoneJaUtilizado = quantidadeTelefones > 0;
+				telefoneJaCadastrado = quantidadeTelefones > 0;
 			}
-		}catch (Exception e) {
-			System.out.println("Erro ao verificar se telefone já foi cadastrado " + telefoneJaUtilizado 
-					+ "\n Causa:" + e.getMessage());
+		} catch (SQLException e) {
+			System.out.println("Erro ao verificar se telefone já foi cadastrado."
+								+ "\n Causa: " + e.getMessage());	
 		}finally {
 			Banco.closePreparedStatement(query);
 			Banco.closeConnection(conexao);
 		}
 		
-		return telefoneJaUtilizado;
+		return telefoneJaCadastrado;
 	}
 }

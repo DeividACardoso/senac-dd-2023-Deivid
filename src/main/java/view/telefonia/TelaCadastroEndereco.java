@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import controller.EnderecoController;
 import model.exception.CampoInvalidoException;
 import model.vo.telefonia.Endereco;
+import javax.swing.SwingConstants;
 
 public class TelaCadastroEndereco {
 
@@ -32,6 +33,8 @@ public class TelaCadastroEndereco {
 	private JButton btnSalvar;
 	private JComboBox cbEstado;
 	
+	private Endereco endereco;
+	
 	//TODO chamar API ou backend futuramente
 	private String[] estados = {"PR", "RS", "SC"};
 
@@ -42,7 +45,7 @@ public class TelaCadastroEndereco {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaCadastroEndereco window = new TelaCadastroEndereco();
+					TelaCadastroEndereco window = new TelaCadastroEndereco(null);
 					window.frmCadastroDeEndereco.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,7 +57,8 @@ public class TelaCadastroEndereco {
 	/**
 	 * Create the application.
 	 */
-	public TelaCadastroEndereco() {
+	public TelaCadastroEndereco(Endereco enderecoSelecionado) {
+		this.endereco = enderecoSelecionado;
 		initialize();
 	}
 
@@ -64,11 +68,12 @@ public class TelaCadastroEndereco {
 	private void initialize() {
 		frmCadastroDeEndereco = new JFrame();
 		frmCadastroDeEndereco.setTitle("Cadastro de endereço");
-		frmCadastroDeEndereco.setBounds(100, 100, 380, 240);
+		frmCadastroDeEndereco.setBounds(100, 100, 390, 260);
 		frmCadastroDeEndereco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmCadastroDeEndereco.getContentPane().setLayout(null);
 		
-		lblCep = new JLabel("CEP:");
+		lblCep = new JLabel("CEP: ");
+		lblCep.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblCep.setBounds(15, 15, 45, 14);
 		frmCadastroDeEndereco.getContentPane().add(lblCep);
 		
@@ -77,23 +82,28 @@ public class TelaCadastroEndereco {
 		frmCadastroDeEndereco.getContentPane().add(txtCep);
 		txtCep.setColumns(10);
 		
-		lblRua = new JLabel("Rua:");
+		lblRua = new JLabel("Rua: ");
+		lblRua.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblRua.setBounds(15, 40, 45, 14);
 		frmCadastroDeEndereco.getContentPane().add(lblRua);
 		
-		lblBairro = new JLabel("Bairro:");
+		lblBairro = new JLabel("Bairro: ");
+		lblBairro.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblBairro.setBounds(15, 65, 45, 14);
 		frmCadastroDeEndereco.getContentPane().add(lblBairro);
 		
-		lblCidade = new JLabel("Cidade:");
+		lblCidade = new JLabel("Cidade: ");
+		lblCidade.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblCidade.setBounds(15, 90, 45, 14);
 		frmCadastroDeEndereco.getContentPane().add(lblCidade);
 		
-		lblNumero = new JLabel("Número:");
+		lblNumero = new JLabel("Número: ");
+		lblNumero.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblNumero.setBounds(15, 115, 45, 14);
 		frmCadastroDeEndereco.getContentPane().add(lblNumero);
 		
-		lblEstado = new JLabel("Estado:");
+		lblEstado = new JLabel("Estado: ");
+		lblEstado.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblEstado.setBounds(15, 140, 45, 14);
 		frmCadastroDeEndereco.getContentPane().add(lblEstado);
 		
@@ -126,6 +136,13 @@ public class TelaCadastroEndereco {
 		btnSalvar = new JButton("Salvar");
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				boolean edicao = false;
+				if(endereco == null) {
+					endereco = new Endereco();
+				} else {
+					edicao = true;
+				}
+				
 				Endereco endereco = new Endereco();
 				endereco.setCep(txtCep.getText());
 				endereco.setRua(txtRua.getText());
@@ -136,7 +153,14 @@ public class TelaCadastroEndereco {
 						
 				EnderecoController controller = new EnderecoController();
 				try {
-					controller.inserir(endereco);
+					if(edicao) {
+						controller.atualizar(endereco);
+					} else {
+						controller.inserir(endereco);
+						limparTela();
+					}
+					JOptionPane.showMessageDialog(null, "Endereco: " + (edicao ? "atualizado " : "criado ") + "com sucesso!",
+							"Sucesso", JOptionPane.INFORMATION_MESSAGE);
 				} catch (CampoInvalidoException e) {
 					JOptionPane.showMessageDialog(null, 
 							"Preencha os seguintes campos: \n" + e.getMessage(), 
@@ -147,7 +171,25 @@ public class TelaCadastroEndereco {
 		btnSalvar.setBounds(130, 170, 100, 23);
 		frmCadastroDeEndereco.getContentPane().add(btnSalvar);
 		
+		if(endereco != null) {
+			txtCep.setText(endereco.getCep());
+			txtRua.setText(endereco.getRua());
+			txtBairro.setText(endereco.getBairro());
+			txtNumero.setText(endereco.getNumero());
+			txtCidade.setText(endereco.getCidade());
+			cbEstado.setSelectedItem(endereco.getEstado());
+		}
+	frmCadastroDeEndereco.setVisible(true);
+	}
 
-	
+	protected void limparTela() {
+		this.endereco = null;
+		
+		txtCep.setText("");
+		txtRua.setText("");
+		txtBairro.setText("");
+		txtNumero.setText("");
+		txtCidade.setText("");
+		cbEstado.setSelectedItem(null);
 	}
 }

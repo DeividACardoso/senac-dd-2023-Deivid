@@ -19,6 +19,7 @@ import javax.swing.text.MaskFormatter;
 import controller.ClienteController;
 import controller.EnderecoController;
 import model.exception.CampoInvalidoException;
+import model.exception.CpfAlteradoException;
 import model.exception.CpfJaUtilizadoException;
 import model.exception.EnderecoInvalidoException;
 import model.vo.telefonia.Cliente;
@@ -37,8 +38,9 @@ public class TelaCadastroClientes {
 	private JLabel lblCpf;
 	private JLabel lblNome;
 	private JButton btnSalvar;
+	private Cliente cliente = new Cliente();
+	private ClienteController clienteController = new ClienteController();
 	
-
 	/**
 	 * Launch the application.
 	 */
@@ -46,7 +48,7 @@ public class TelaCadastroClientes {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaCadastroClientes window = new TelaCadastroClientes();
+					TelaCadastroClientes window = new TelaCadastroClientes(null);
 					window.frmCadastroCliente.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -57,8 +59,10 @@ public class TelaCadastroClientes {
 
 	/**
 	 * Create the application.
+	 * @param cliente 
 	 */
-	public TelaCadastroClientes() {
+	public TelaCadastroClientes(Cliente clienteSelecionado) {
+		this.cliente = clienteSelecionado;
 		initialize();
 	}
 
@@ -68,7 +72,7 @@ public class TelaCadastroClientes {
 	private void initialize() {
 		frmCadastroCliente = new JFrame();
 		frmCadastroCliente.setBounds(100, 100, 450, 175);
-		frmCadastroCliente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmCadastroCliente.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmCadastroCliente.getContentPane().setLayout(null);
 		
 			
@@ -112,7 +116,14 @@ public class TelaCadastroClientes {
 		btnSalvar = new JButton("Salvar");
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Cliente cliente = new Cliente();
+				boolean edicao = false;
+				
+				if(cliente == null) {
+				cliente = new Cliente();
+				} else {
+					edicao = true;
+				}
+				
 				cliente.setNome(txtNome.getText());
 				try {
 					String cpfSemMascara = (String) mascaraCpf.stringToValue(fTxtCpf.getText());
@@ -127,8 +138,18 @@ public class TelaCadastroClientes {
 				ClienteController controllerCliente = new ClienteController();
 				
 				try {
-					controllerCliente.inserir(cliente);
-					JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+					if(edicao) {
+						try {
+							clienteController.atualizar(cliente);
+						} catch (CpfAlteradoException excecao) {
+							JOptionPane.showMessageDialog(null, "Cpf não pode ser alterado!" + excecao.getMessage()
+							, "Atenção", JOptionPane.WARNING_MESSAGE);
+						}
+					}else {
+						clienteController.inserir(cliente);
+					}
+					JOptionPane.showMessageDialog(null, "Cliente" + (edicao ? " atualizado " : " criado ") + "com sucesso!",
+							"Sucesso", JOptionPane.INFORMATION_MESSAGE);
 				} catch (CpfJaUtilizadoException e1) {
 					JOptionPane.showMessageDialog(null, 
 							"CPF já utilizado: \n" + e1.getMessage(), 
@@ -147,7 +168,6 @@ public class TelaCadastroClientes {
 		});
 		btnSalvar.setBounds(335, 106, 89, 23);
 		frmCadastroCliente.getContentPane().add(btnSalvar);
-			
-		
+		frmCadastroCliente.setVisible(true);
 	}
 }

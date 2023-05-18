@@ -62,6 +62,14 @@ public class MenuTelefonia {
 		menuBar.add(mnCliente);
 		
 		JMenuItem mntmCadastrarCliente = new JMenuItem("Cadastrar Cliente");
+		mntmCadastrarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PainelCadastroCliente painelCadastroCliente = new PainelCadastroCliente(null);
+				frame.setContentPane(painelCadastroCliente);
+				painelCadastroCliente.setVisible(true);
+				frame.revalidate();
+			}
+		});
 		mntmCadastrarCliente.setIcon(new ImageIcon(MenuTelefonia.class.getResource("/icones/icons8-adicionar-usuário-masculino-32.png")));
 		mntmCadastrarCliente.setBackground(new Color(240, 240, 240));
 		mnCliente.add(mntmCadastrarCliente);
@@ -93,6 +101,15 @@ public class MenuTelefonia {
 		JMenuItem mntmListarTelefones = new JMenuItem("Listar Telefones");
 		mntmListarTelefones.setIcon(new ImageIcon(MenuTelefonia.class.getResource("/icones/icons8-lista-32.png")));
 		mnTelefone.add(mntmListarTelefones);
+		mntmListarTelefones.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Evento de clique no botão -> instancia o painel e troca
+				PainelListagemTelefone painelListagemTelefone = new PainelListagemTelefone();
+				frame.setContentPane(painelListagemTelefone);
+				painelListagemTelefone.setVisible(true);
+				frame.revalidate();
+			}
+		});
 		
 		JMenu mnSobre = new JMenu("Sobre");
 		mnSobre.addMouseListener(new MouseAdapter() {

@@ -135,7 +135,6 @@ public class TelaListagemClientes {
 		});
 		btnEditar = new JButton("Editar");
 		btnEditar.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				TelaCadastroClientes telaEdicaoCliente = new TelaCadastroClientes(clienteSelecionado);
 				

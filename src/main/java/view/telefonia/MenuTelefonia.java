@@ -111,6 +111,19 @@ public class MenuTelefonia {
 			}
 		});
 		
+		PainelCadastroCliente painelCadastroCliente = new PainelCadastroCliente(null);
+		painelCadastroCliente.getBtnSalvar().addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PainelListagemCliente painelListagemCliente = new PainelListagemCliente();
+				frame.setContentPane(painelListagemCliente);
+				painelListagemCliente.setVisible(true);
+				frame.revalidate();
+			}
+			
+		});
+		
 		JMenu mnSobre = new JMenu("Sobre");
 		mnSobre.addMouseListener(new MouseAdapter() {
 			@Override

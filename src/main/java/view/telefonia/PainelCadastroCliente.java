@@ -135,16 +135,15 @@ public class PainelCadastroCliente extends JPanel {
 		
 		
 		btnVoltar = new JButton("Voltar");
-		btnVoltar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
 		add(btnVoltar, "8, 12");
 		
 		if(this.cliente.getId() != null) {
 			preencherCamposDaTela();
 		}
+	}
+
+	public JButton getBtnSalvar() {
+		return btnSalvar;
 	}
 
 	private void preencherCamposDaTela() {

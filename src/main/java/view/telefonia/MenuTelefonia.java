@@ -70,6 +70,7 @@ public class MenuTelefonia {
 				frame.revalidate();
 			}
 		});
+
 		mntmCadastrarCliente.setIcon(new ImageIcon(MenuTelefonia.class.getResource("/icones/icons8-adicionar-usuário-masculino-32.png")));
 		mntmCadastrarCliente.setBackground(new Color(240, 240, 240));
 		mnCliente.add(mntmCadastrarCliente);
@@ -79,6 +80,14 @@ public class MenuTelefonia {
 		mnCliente.add(mntmEditarCliente);
 		
 		JMenuItem mntmListarClientes = new JMenuItem("Listar Cliente(s)");
+		mntmListarClientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PainelListagemCliente painelListagemCliente = new PainelListagemCliente();
+				frame.setContentPane(painelListagemCliente);
+				painelListagemCliente.setVisible(true);
+				frame.revalidate();
+			}
+		});
 		mntmListarClientes.setIcon(new ImageIcon(MenuTelefonia.class.getResource("/icones/icons8-lista-32.png")));
 		mnCliente.add(mntmListarClientes);
 		
@@ -112,14 +121,13 @@ public class MenuTelefonia {
 		});
 		
 		PainelCadastroCliente painelCadastroCliente = new PainelCadastroCliente(null);
-		painelCadastroCliente.getBtnSalvar().addActionListener(new ActionListener() {
+		painelCadastroCliente.getBtnSalvar(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				PainelListagemCliente painelListagemCliente = new PainelListagemCliente();
+				PainelListagemCliente painelListagemCliente = new PainelListagemCliente(); 
 				frame.setContentPane(painelListagemCliente);
 				painelListagemCliente.setVisible(true);
-				frame.revalidate();
 			}
 			
 		});

@@ -1,8 +1,8 @@
 package view.telefonia;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -17,63 +17,62 @@ import controller.TelefoneController;
 import model.vo.telefonia.Cliente;
 import model.vo.telefonia.Telefone;
 
-	
 public class TelaListagemTelefone extends JPanel {
-	private JTable tabelaTelefones;
-	private String[] nomeColunas = {"Número Completo", "DDD", "Nome Cliente", "Ativo?"};
-	private ArrayList<Telefone> telefones;
-	
+	private JTable tblTelefones;
+	private String[] nomesColunas = {  "Número Completo", "Tipo", "Nome Cliente", "Ativo?" };
+	private List<Telefone> telefones = new ArrayList<>();
+	private TelefoneController controller = new TelefoneController();
 	
 	private void limparTabela() {
-		tabelaTelefones.setModel(new DefaultTableModel(new Object[][] { nomeColunas, }, nomeColunas));
+		tblTelefones.setModel(new DefaultTableModel(new Object[][] { nomesColunas, }, nomesColunas));
 	}
 	
-	private void atualizarTabelaClientes() {
+	private void atualizarTabela() {
 		this.limparTabela();
-		Telefone telefone = new Telefone();
-		TelefoneController t = new TelefoneController();
-		telefones = (ArrayList<Telefone>) t.consultarTodos();
 		
-		String nomeCompleto = "Sem nome.";
-		if(nomeCompleto != null) {
-			ClienteController clienteController = new ClienteController();
+
+		DefaultTableModel model = (DefaultTableModel) tblTelefones.getModel();
+
+		ClienteController clienteController = new ClienteController();
+		for (Telefone t : this.telefones) {
+			//TODO melhorar para usar DTO
+			String nomeCliente = "Sem cliente";
+			if(t.getIdCliente() != null) {
+				Cliente clienteBuscado = clienteController.consultarPorId(t.getIdCliente());
+				
+				if(clienteBuscado != null) {
+					nomeCliente = clienteBuscado.getNome();
+				}
+			}
 			
-			Cliente clienteBuscado = clienteController.consultarPorId(telefone.getIdCliente());
-			nomeCompleto = clienteBuscado.getNome();
-		}
-		
-		DefaultTableModel model = (DefaultTableModel) tabelaTelefones.getModel();
-		for (Telefone e : telefones) {
 			Object[] novaLinhaDaTabela = new Object[4];
-			
-			novaLinhaDaTabela[0] = e.getNumero();
-			novaLinhaDaTabela[1] = e.getDdd();
-			novaLinhaDaTabela[2] = nomeCompleto;
-			novaLinhaDaTabela[3] = e.isAtivo();
-			
+			novaLinhaDaTabela[0] = "("+ t.getDdd() + ") " + t.getNumero();
+			novaLinhaDaTabela[1] = t.isMovel() ? "Móvel" : "Fixo";
+			novaLinhaDaTabela[2] = nomeCliente;
+			novaLinhaDaTabela[3] = t.isAtivo() ? "Sim" : "Não";
+
 			model.addRow(novaLinhaDaTabela);
 		}
 	}
 	
-	/**
-	 * Create the panel.
-	 */
+	private void buscarTelefones() {
+		this.telefones = controller.consultarTodos();
+		this.atualizarTabela();
+	}
+
 	public TelaListagemTelefone() {
 		setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(298dlu;default):grow"),},
+				ColumnSpec.decode("default:grow"),},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),}));
 		
-		JLabel lblNewLabel = new JLabel("");
-		add(lblNewLabel, "2, 2, fill, fill");
 		
-		tabelaTelefones = new JTable();
-		add(tabelaTelefones, "2, 4, fill, fill");
-		atualizarTabelaClientes();
+		tblTelefones = new JTable();
+		add(tblTelefones, "2, 4, fill, fill");
+		buscarTelefones();
 	}
-
-}
+}	

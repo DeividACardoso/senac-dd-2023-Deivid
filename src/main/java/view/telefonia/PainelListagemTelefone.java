@@ -30,7 +30,6 @@ public class PainelListagemTelefone extends JPanel {
 	private void atualizarTabela() {
 		this.limparTabela();
 
-
 		DefaultTableModel model = (DefaultTableModel) tblTelefones.getModel();
 
 		ClienteController clienteController = new ClienteController();
@@ -62,7 +61,6 @@ public class PainelListagemTelefone extends JPanel {
 
 	public PainelListagemTelefone() {
 		setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.UNRELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -72,7 +70,7 @@ public class PainelListagemTelefone extends JPanel {
 
 
 		tblTelefones = new JTable();
-		add(tblTelefones, "2, 4, fill, fill");
+		add(tblTelefones, "1, 4, fill, fill");
 		buscarTelefones();
 	}
 }
